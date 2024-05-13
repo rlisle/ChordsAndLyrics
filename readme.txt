@@ -76,6 +76,9 @@ Install over previous version.
 
 == Changelog ==
 
+= 1.8.0 =
+* Fix deprecated get_currentuserinfo error
+
 = 1.7.0 =
 * Add support for European chord style (aHcdefg, B=Bb)
 
