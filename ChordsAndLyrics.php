@@ -143,18 +143,18 @@ class ChordsAndLyricsData
 	
 	public function __construct()
 	{
-		// $current_user = wp_get_current_user();
-		// if($current_user->exists()){
-		// 	$user_settings_name = 'cnl_setting_values_for_' . $current_user->user_login;
-		// }else{
-		// 	$user_settings_name = 'cnl_setting_values_for_unknown';
-		// }
+		$current_user = wp_get_current_user();
+		if($current_user->exists()){
+			$user_settings_name = 'cnl_setting_values_for_' . $current_user->user_login;
+		}else{
+			$user_settings_name = 'cnl_setting_values_for_unknown';
+		}
 	
-		// $cnl_options = get_option($user_settings_name);
-		// $this->lyricsOnly = $cnl_options['lyrics-only'];
-		// $this->twoPages = $cnl_options['two-pages'];
-		// $this->transpose = 0;
-		// $this->displayEuropean = $cnl_options['european-chords'];
+		$cnl_options = get_option($user_settings_name);
+		$this->lyricsOnly = $cnl_options['lyrics-only'];
+		$this->twoPages = $cnl_options['two-pages'];
+		$this->transpose = 0;
+		$this->displayEuropean = $cnl_options['european-chords'];
 	}
 
 	public function setTranspose( $t ){
