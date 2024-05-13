@@ -46,10 +46,10 @@ function chordsandlyrics_settings_init(){
 		$user_settings_name = 'cnl_setting_values_for_unknown';
 	}
 	add_settings_section('cnl_setting_section','Chords and Lyrics Options','cnl_setting_section','reading');
-	// add_settings_field('lyrics-only','Display chords or lyrics only?','cnl_lyrics_only_enabled',
-	// 				'reading','cnl_setting_section');
-	// add_settings_field('european-chords','Display European chords?','cnl_european_chords_enabled',
-	// 				'reading','cnl_setting_section');
+	add_settings_field('lyrics-only','Display chords or lyrics only?','cnl_lyrics_only_enabled',
+					'reading','cnl_setting_section');
+	add_settings_field('european-chords','Display European chords?','cnl_european_chords_enabled',
+					'reading','cnl_setting_section');
 	register_setting('reading',$user_settings_name);
 }
 
@@ -59,33 +59,33 @@ function cnl_setting_section(){
    echo '<p>Select options for displaying chords for ' . $debug_name . '</p>';
 }
 
-// function cnl_lyrics_only_enabled(){
-// 	$current_user = wp_get_current_user();
-// 	if($current_user->exists()){
-// 		$user_settings_name = 'cnl_setting_values_for_' . $current_user->user_login;
-// 	}else{
-// 		$user_settings_name = 'cnl_setting_values_for_unknown';
-// 	}
-// 	$cnl_options = get_option($user_settings_name);
-// 	if($cnl_options['lyrics-only']){
-// 		$checked = ' checked="checked" ';
-// 	}
-// 	echo '<input '.$checked.' name="'.$user_settings_name.'[lyrics-only]" type="checkbox" />Lyrics Only';
-// }
+function cnl_lyrics_only_enabled(){
+	$current_user = wp_get_current_user();
+	if($current_user->exists()){
+		$user_settings_name = 'cnl_setting_values_for_' . $current_user->user_login;
+	}else{
+		$user_settings_name = 'cnl_setting_values_for_unknown';
+	}
+	$cnl_options = get_option($user_settings_name);
+	if($cnl_options['lyrics-only']){
+		$checked = ' checked="checked" ';
+	}
+	echo '<input '.$checked.' name="'.$user_settings_name.'[lyrics-only]" type="checkbox" />Lyrics Only';
+}
 
-// function cnl_european_chords_enabled(){
-// 	$current_user = wp_get_current_user();
-// 	if($current_user->exists()){
-// 		$user_settings_name = 'cnl_setting_values_for_' . $current_user->user_login;
-// 	}else{
-// 		$user_settings_name = 'cnl_setting_values_for_unknown';
-// 	}
-// 	$cnl_options = get_option($user_settings_name);
-// 	if($cnl_options['european-chords']){
-// 		$checked = ' checked="checked" ';
-// 	}
-// 	echo '<input '.$checked.' name="'.$user_settings_name.'[european-chords]" type="checkbox" />European chords';
-// }
+function cnl_european_chords_enabled(){
+	$current_user = wp_get_current_user();
+	if($current_user->exists()){
+		$user_settings_name = 'cnl_setting_values_for_' . $current_user->user_login;
+	}else{
+		$user_settings_name = 'cnl_setting_values_for_unknown';
+	}
+	$cnl_options = get_option($user_settings_name);
+	if($cnl_options['european-chords']){
+		$checked = ' checked="checked" ';
+	}
+	echo '<input '.$checked.' name="'.$user_settings_name.'[european-chords]" type="checkbox" />European chords';
+}
 
 /*
  * ShortCode
