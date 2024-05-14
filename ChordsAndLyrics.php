@@ -2,13 +2,13 @@
 /**
  * @package Chords_And_Lyrics
  * @author  Ron Lisle
- * @version 1.8
+ * @version 2.0
  */
 /*
 Plugin Name: ChordsAndLyrics
 Plugin URI: http://Lisles.net/
 Description: This plugin assists in the creation of staffless lead sheets.
-Version: 1.8 debugging 2 - options removed for now
+Version: 2.0
 Author: Ron Lisle
 Author URI: http://Lisles.net
 
@@ -39,18 +39,22 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 add_action('admin_init', 'chordsandlyrics_settings_init');
 
 function chordsandlyrics_settings_init(){
-	$current_user = wp_get_current_user();
-	if($current_user->exists()){
-		$user_settings_name = 'cnl_setting_values_for_' . $current_user->user_login;
-	}else{
-		$user_settings_name = 'cnl_setting_values_for_unknown';
-	}
+	$setting_prefix = cnl_setting_prefix();
 	add_settings_section('cnl_setting_section','Chords and Lyrics Options','cnl_setting_section','reading');
 	add_settings_field('lyrics-only','Display chords or lyrics only?','cnl_lyrics_only_enabled',
 					'reading','cnl_setting_section');
 	add_settings_field('european-chords','Display European chords?','cnl_european_chords_enabled',
 					'reading','cnl_setting_section');
-	register_setting('reading',$user_settings_name);
+	register_setting('reading',$setting_prefix . 'lyrics_only');
+	register_setting('reading',$setting_prefix . 'european');
+}
+
+function cnl_setting_prefix(){
+	$current_user = wp_get_current_user();
+	if($current_user->exists()){
+		return 'cnl_' . $current_user->user_login . '_';
+	}
+	return 'cnl_unknown_';
 }
 
 function cnl_setting_section(){
@@ -60,31 +64,21 @@ function cnl_setting_section(){
 }
 
 function cnl_lyrics_only_enabled(){
-	$current_user = wp_get_current_user();
-	if($current_user->exists()){
-		$user_settings_name = 'cnl_setting_values_for_' . $current_user->user_login;
-	}else{
-		$user_settings_name = 'cnl_setting_values_for_unknown';
-	}
-	$cnl_options = get_option($user_settings_name);
-	if($cnl_options['lyrics-only']){
+	$option_name = cnl_setting_prefix() . 'lyrics_only';
+	$option = get_option($option_name);
+	if($option){
 		$checked = ' checked="checked" ';
 	}
-	echo '<input '.$checked.' name="'.$user_settings_name.'[lyrics-only]" type="checkbox" />Lyrics Only';
+	echo '<input '.$checked.' name="'.$option_name.'" type="checkbox" />Lyrics Only';
 }
 
 function cnl_european_chords_enabled(){
-	$current_user = wp_get_current_user();
-	if($current_user->exists()){
-		$user_settings_name = 'cnl_setting_values_for_' . $current_user->user_login;
-	}else{
-		$user_settings_name = 'cnl_setting_values_for_unknown';
-	}
-	$cnl_options = get_option($user_settings_name);
-	if($cnl_options['european-chords']){
+	$option_name = cnl_setting_prefix() . 'european';
+	$option = get_option($option_name);
+	if($option){
 		$checked = ' checked="checked" ';
 	}
-	echo '<input '.$checked.' name="'.$user_settings_name.'[european-chords]" type="checkbox" />European chords';
+	echo '<input '.$checked.' name="'.$option_name.'" type="checkbox" />European chords';
 }
 
 /*
@@ -135,7 +129,6 @@ add_shortcode('chordsandlyrics', 'chordsandlyricstag_func');
 class ChordsAndLyricsData
 {
 	private $lyricsOnly;
-	private $twoPages;
 	private $transpose;
 	private $size;
 	private $european;
@@ -143,18 +136,9 @@ class ChordsAndLyricsData
 	
 	public function __construct()
 	{
-		$current_user = wp_get_current_user();
-		if($current_user->exists()){
-			$user_settings_name = 'cnl_setting_values_for_' . $current_user->user_login;
-		}else{
-			$user_settings_name = 'cnl_setting_values_for_unknown';
-		}
-	
-		$cnl_options = get_option($user_settings_name);
-		$this->lyricsOnly = $cnl_options['lyrics-only'];
-		$this->twoPages = $cnl_options['two-pages'];
+		$this->lyricsOnly = get_option(cnl_setting_prefix().'lyrics-only');
 		$this->transpose = 0;
-		$this->displayEuropean = $cnl_options['european-chords'];
+		$this->displayEuropean = get_option(cnl_setting_prefix().'european');
 	}
 
 	public function setTranspose( $t ){
@@ -196,9 +180,6 @@ class ChordsAndLyricsData
 		$returnText .= '<div class="cnl_page">';
 		$lineNum = 1;
 		foreach( $text as $line ){
-			// if($this->twoPages=='on'){
-			// 	//TODO: provide a mechanism to allow the author to split pages
-			// }
 			$returnText .= $this->FormatAndDisplayLine($line,$lineNum++);
 		}
 		$returnText .= '</div>'; 							// end of cnl_page
