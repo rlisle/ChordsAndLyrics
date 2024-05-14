@@ -136,7 +136,7 @@ class ChordsAndLyricsData
 	
 	public function __construct()
 	{
-		$this->lyricsOnly = get_option(cnl_setting_prefix().'lyrics-only');
+		$this->lyricsOnly = get_option(cnl_setting_prefix().'lyrics_only');
 		$this->transpose = 0;
 		$this->displayEuropean = get_option(cnl_setting_prefix().'european');
 	}
